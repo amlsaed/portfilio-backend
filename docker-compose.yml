@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16
+    container_name: portfolio_pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: appsecret
+      POSTGRES_DB: portfolio_db
+    ports:
+      - "5433:5432"     # host:container (use 5433 on host to avoid clashes)
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # (optional) pgAdmin for a GUI
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: portfolio_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
